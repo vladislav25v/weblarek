@@ -20,11 +20,12 @@ const getData = new Communicator(apiRequest);
 productsModel.setItems(await getData.get());
 productsModel.setActiveItem(productsModel.getItems()[0].id);
 
-cartModel.addItem(apiProducts.items[0]);
 cartModel.checkItem(apiProducts.items[0].id);
 cartModel.addItem(apiProducts.items[3]);
 cartModel.deleteItem(apiProducts.items[3]);
 cartModel.deleteAll();
+cartModel.addItem(productsModel.getItems()[1]);
+cartModel.addItem(productsModel.getItems()[3]);
 
 customerModel.addData(formImitation);
 customerModel.clearData();
@@ -34,6 +35,6 @@ console.log(`Открытый товар:`, productsModel.getActiveItem());
 console.log(`Проверка товара в корзине:`, cartModel.checkItem(apiProducts.items[0].id));
 console.log(`Товары в корзине:`, cartModel.getCartList());
 console.log(`Количество товаров:`, cartModel.getQuantityItems());
-console.log(`Сумма товаров:`, cartModel.getAmount());
+console.log(`Сумма товаров:`, cartModel.getAmount(productsModel.getItems()));
 console.log(`Данные формы1:`, customerModel.getData());
 console.log(`Валидация:`, customerModel.validateData(customerModel.getData()));

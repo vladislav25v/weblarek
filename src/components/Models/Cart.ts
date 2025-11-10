@@ -2,21 +2,21 @@ import { IProduct } from '@types';
 import { IProductById } from '@types';
 
 export class Cart {
-    constructor(private cartItems: IProduct[] = []) {}
+    constructor(private cartItems: IProductById[] = []) {}
 
     addItem(item: IProduct): void {
-        this.cartItems.push(item);
+        if (!this.cartItems.includes(item.id)) this.cartItems.push(item.id);
     }
 
     deleteItem(item: IProduct): void {
-        this.cartItems = this.cartItems.filter((itemCart) => itemCart.id !== item.id);
+        this.cartItems = this.cartItems.filter((itemCart) => itemCart !== item.id);
     }
 
     deleteAll(): void {
         this.cartItems = [];
     }
 
-    getCartList(): IProduct[] {
+    getCartList(): IProductById[] {
         return this.cartItems;
     }
 
@@ -24,11 +24,14 @@ export class Cart {
         return this.cartItems.length;
     }
 
-    getAmount(): number {
-        return this.cartItems.reduce((sum, item) => sum + (item.price ?? 0), 0);
+    getAmount(products: IProduct[]): number {
+        return this.cartItems.reduce((sum, id) => {
+            const product = products.find((p) => p.id === id);
+            return sum + (product?.price ?? 0);
+        }, 0);
     }
 
     checkItem(item: IProductById): boolean {
-        return this.cartItems.some((p) => p.id === item);
+        return this.cartItems.includes(item);
     }
 }
