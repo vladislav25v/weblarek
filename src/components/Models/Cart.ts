@@ -2,7 +2,9 @@ import { IProduct } from '@types';
 import { IProductById } from '@types';
 
 export class Cart {
-    constructor(private cartItems: IProductById[] = []) {}
+    private cartItems: IProductById[] = [];
+
+    constructor() {}
 
     addItem(item: IProduct): void {
         if (!this.cartItems.includes(item.id)) this.cartItems.push(item.id);

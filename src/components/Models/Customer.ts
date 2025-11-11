@@ -2,7 +2,9 @@ import { IBuyer } from '@types';
 import { IValidated } from '@types';
 
 export class Customer {
-    constructor(private customerData: Partial<IBuyer> = { payment: null }) {}
+    private customerData: Partial<IBuyer> = { payment: null };
+
+    constructor() {}
 
     validateData(formData: Partial<IBuyer>): Partial<IValidated> {
         const validatedData: Partial<IValidated> = {};

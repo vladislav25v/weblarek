@@ -4,11 +4,11 @@ import { IRequest } from '@types';
 export class Communicator {
     constructor(private response: IApi) {}
 
-    get(): Promise<IProduct[]> {
+    getProducts(): Promise<IProduct[]> {
         return this.response.get<IRequest>('/product').then((r) => r.items);
     }
 
-    post(customer: IBuyer) {
+    sendOrder(customer: IBuyer) {
         this.response.post('/order', customer);
     }
 }

@@ -17,7 +17,12 @@ const formImitation = {
 const apiRequest = new Api(API_URL);
 const getData = new Communicator(apiRequest);
 
-productsModel.setItems(await getData.get());
+try {
+    productsModel.setItems(await getData.getProducts());
+} catch (error) {
+    console.error('Ошибка получения данных', error);
+}
+
 productsModel.setActiveItem(productsModel.getItems()[0].id);
 
 cartModel.checkItem(apiProducts.items[0].id);
