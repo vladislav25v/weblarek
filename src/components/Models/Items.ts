@@ -1,41 +1,41 @@
 import { IProduct } from '@types';
-import { IProductById } from '@types';
-import { IProductOrNull } from '@types';
-import { IProductOrString } from '@types';
+import { TProductById } from '@types';
+import { TProductOrNull } from '@types';
+import { IEvents } from '../base/Events';
 
 export class Items {
-    private activeItem: IProductOrNull = null;
-    private items: IProduct[] = [];
-    constructor() {}
+  private activeItem: TProductOrNull = null;
+  private items: IProduct[] = [];
+  constructor(private events: IEvents) {}
 
-    setItems(items: IProduct[]): void {
-        this.items = items;
-        if (this.activeItem && !this.items.some((p) => p.id === this.activeItem!.id)) {
-            this.activeItem = null;
-        }
+  setItems(items: IProduct[]): void {
+    this.items = items;
+    this.events.emit('gallery: updated');
+  }
+
+  getItems(): IProduct[] {
+    return this.items;
+  }
+
+  getItemById(id: TProductById): IProduct {
+    const product = this.items.find((item) => item.id === id);
+    if (!product) {
+      throw new Error("Item isn't found");
     }
 
-    getItems(): IProduct[] {
-        return this.items;
-    }
+    return product;
+  }
 
-    getItemById(id: IProductById): IProductOrString {
-        const item = this.items.find((item) => item.id === id);
-        if (!item) {
-            return `Товар ${id} закончился`;
-        }
-        return item;
+  setActiveItem(pickedCard: TProductById): void {
+    if (!pickedCard) {
+      this.activeItem = null;
+      return;
     }
+    this.activeItem = this.items.find((i) => i.id === pickedCard) ?? null;
+    this.events.emit('gallery:picked');
+  }
 
-    setActiveItem(pickedCard: IProductById): void {
-        if (!pickedCard) {
-            this.activeItem = null;
-            return;
-        }
-        this.activeItem = this.items.find((i) => i.id === pickedCard) ?? null;
-    }
-
-    getActiveItem(): IProductOrNull {
-        return this.activeItem;
-    }
+  getActiveItem(): TProductOrNull {
+    return this.activeItem;
+  }
 }
