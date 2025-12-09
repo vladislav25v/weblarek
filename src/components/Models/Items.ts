@@ -11,6 +11,7 @@ export class Items {
   setItems(items: IProduct[]): void {
     this.items = items;
     this.events.emit('gallery: updated');
+    this.events.emit('gallery:updated');
   }
 
   getItems(): IProduct[] {

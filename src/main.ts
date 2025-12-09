@@ -109,7 +109,7 @@ function renderFormContacts() {
     email: data.email,
     phone: data.phone,
     validated,
-    valid: validated.email === true && validated.phone === true,
+    valid: Object.values(validated).every((v) => v === true),
   });
 }
 
@@ -249,7 +249,6 @@ clientApi
   .getProducts()
   .then((items) => {
     productsModel.setItems(items);
-    broker.emit('gallery:updated');
   })
   .catch((error) => {
     console.error('Error loading data', error);
