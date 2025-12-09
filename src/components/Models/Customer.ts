@@ -9,26 +9,29 @@ export class Customer {
 
   constructor(private events: IEvents) {}
 
-  validateData(formData: Partial<IBuyer>, strict = false): Partial<TValidated> {
+  validateData(formData: Partial<IBuyer>): Partial<TValidated> {
     const validatedData: Partial<TValidated> = {};
 
+    // payment
     if (formData.payment === 'online' || formData.payment === 'uponDelivery') {
       validatedData.payment = true;
-    } else if (strict) {
+    } else {
       validatedData.payment = 'Выберите метод оплаты';
     }
 
-    if (formData.address !== undefined) {
+    // address
+    if (formData.address) {
       if (formData.address.trim().length > 3) {
         validatedData.address = true;
       } else {
         validatedData.address = 'Введите корректный адрес';
       }
-    } else if (strict) {
+    } else {
       validatedData.address = 'Введите адрес';
     }
 
-    if (formData.email !== undefined) {
+    // email
+    if (formData.email) {
       const regex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
       if (regex.test(formData.email.trim())) {
@@ -36,11 +39,12 @@ export class Customer {
       } else {
         validatedData.email = 'Введите корректный адрес электропочты';
       }
-    } else if (strict) {
+    } else {
       validatedData.email = 'Введите адрес электропочты';
     }
 
-    if (formData.phone !== undefined) {
+    // phone
+    if (formData.phone) {
       const regex = /^\+?\d[\d\s().-]{6,}$/;
 
       if (regex.test(formData.phone.trim())) {
@@ -48,7 +52,7 @@ export class Customer {
       } else {
         validatedData.phone = 'Введите корректный номер телефона';
       }
-    } else if (strict) {
+    } else {
       validatedData.phone = 'Введите номер телефона';
     }
 

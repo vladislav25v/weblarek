@@ -18,13 +18,12 @@ export abstract class CardComponent<T extends ICardComponent> extends Component<
   }
 
   render(data?: Partial<T>): HTMLElement {
-    if (!data) return this.container;
-
     super.render(data);
 
-    if (data.price !== undefined) {
+    if (data?.price !== undefined) {
       this.priceElement.textContent = data.price === null ? 'Бесценно' : `${data.price} синапсов`;
     }
+
     return this.container;
   }
 }

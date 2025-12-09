@@ -22,12 +22,12 @@ export class CardBasket extends CardComponent<ICardBasket> {
     this.indexElement = ensureElement('.basket__item-index', this.container);
     this.deleteButtonElement = ensureElement<HTMLButtonElement>('.basket__item-delete', this.container);
 
-    if (this.action?.toRemove) {
+    const removeFn = this.action?.toRemove;
+
+    if (removeFn) {
       this.deleteButtonElement.addEventListener('click', (event) => {
         event.stopPropagation();
-        if (this.action?.toRemove) {
-          this.action.toRemove();
-        }
+        removeFn();
       });
     }
   }
