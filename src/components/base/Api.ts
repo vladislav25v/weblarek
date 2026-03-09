@@ -14,16 +14,31 @@ export class Api {
     };
   }
 
-  protected handleResponse<T>(response: Response): Promise<T> {
-    if (response.ok) return response.json();
-    else return response.json().then((data) => Promise.reject(data.error ?? response.statusText));
+  protected async handleResponse<T>(response: Response): Promise<T> {
+    const contentType = response.headers.get('content-type') ?? '';
+
+    if (!contentType.includes('application/json')) {
+      const body = await response.text();
+      const preview = body.slice(0, 120).trim();
+      throw new Error(
+        `Expected JSON but received ${contentType || 'unknown content type'} from ${response.url}. ${preview}`,
+      );
+    }
+
+    const data = await response.json();
+
+    if (response.ok) {
+      return data as T;
+    }
+
+    throw new Error(data.error ?? response.statusText);
   }
 
   get<T extends object>(uri: string) {
     return fetch(this.baseUrl + uri, {
       ...this.options,
       method: 'GET',
-    }).then(this.handleResponse<T>);
+    }).then((response) => this.handleResponse<T>(response));
   }
 
   post<T extends object>(uri: string, data: object, method: ApiPostMethods = 'POST') {
@@ -31,6 +46,6 @@ export class Api {
       ...this.options,
       method,
       body: JSON.stringify(data),
-    }).then(this.handleResponse<T>);
+    }).then((response) => this.handleResponse<T>(response));
   }
 }
